@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitFlow - API Test</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0f172a;
+            color: #f8fafc;
+        }
+        .test-section {
+            background: #1e293b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border: 1px solid #334155;
+        }
+        button {
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #7c3aed;
+        }
+        .result {
+            background: #0f172a;
+            padding: 15px;
+            margin-top: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .success { color: #10b981; }
+        .error { color: #ef4444; }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            background: #334155;
+            border: 1px solid #475569;
+            color: #f8fafc;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 HabitFlow API Test Suite</h1>
+    
+    <div class="test-section">
+        <h2>1. Server Status</h2>
+        <button onclick="testStatus()">Test /api/status</button>
+        <div id="status-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>2. User Signup</h2>
+        <input type="text" id="signup-username" placeholder="Username" value="testuser">
+        <input type="email" id="signup-email" placeholder="Email" value="test@example.com">
+        <input type="password" id="signup-password" placeholder="Password" value="password123">
+        <button onclick="testSignup()">Sign Up</button>
+        <div id="signup-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>3. User Login</h2>
+        <input type="email" id="login-email" placeholder="Email" value="test@example.com">
+        <input type="password" id="login-password" placeholder="Password" value="password123">
+        <button onclick="testLogin()">Login</button>
+        <div id="login-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>4. Create Habit</h2>
+        <input type="text" id="habit-name" placeholder="Habit Name" value="Morning Exercise">
+        <button onclick="testCreateHabit()">Create Habit</button>
+        <div id="habit-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>5. Get Habits</h2>
+        <button onclick="testGetHabits()">Get All Habits</button>
+        <div id="get-habits-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>6. Toggle Completion</h2>
+        <input type="text" id="habit-id" placeholder="Habit ID (from above)">
+        <button onclick="testToggleCompletion()">Toggle Today's Completion</button>
+        <div id="toggle-result" class="result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>7. Get Stats</h2>
+        <button onclick="testGetStats()">Get User Stats</button>
+        <div id="stats-result" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3000/api';
+        let token = '';
+
+        async function apiCall(endpoint, method = 'GET', body = null) {
+            const headers = {
+                'Content-Type': 'application/json',
+                ...(token && { 'Authorization': `Bearer ${token}` })
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    method,
+                    headers,
+                    body: body ? JSON.stringify(body) : null
+                });
+
+                const data = await response.json();
+                return { ok: response.ok, status: response.status, data };
+            } catch (err) {
+                return { ok: false, error: err.message };
+            }
+        }
+
+        function displayResult(elementId, result) {
+            const el = document.getElementById(elementId);
+            const className = result.ok ? 'success' : 'error';
+            el.innerHTML = `<span class="${className}">${JSON.stringify(result, null, 2)}</span>`;
+        }
+
+        async function testStatus() {
+            const result = await apiCall('/status');
+            displayResult('status-result', result);
+        }
+
+        async function testSignup() {
+            const username = document.getElementById('signup-username').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            const result = await apiCall('/auth/signup', 'POST', {
+                username, email, password, timezone: 'Asia/Kolkata'
+            });
+            
+            if (result.ok && result.data.token) {
+                token = result.data.token;
+            }
+            
+            displayResult('signup-result', result);
+        }
+
+        async function testLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            const result = await apiCall('/auth/login', 'POST', { email, password });
+            
+            if (result.ok && result.data.token) {
+                token = result.data.token;
+            }
+            
+            displayResult('login-result', result);
+        }
+
+        async function testCreateHabit() {
+            const name = document.getElementById('habit-name').value;
+            const result = await apiCall('/habits', 'POST', {
+                name,
+                category: 'Health',
+                difficulty: 'Medium'
+            });
+            displayResult('habit-result', result);
+        }
+
+        async function testGetHabits() {
+            const result = await apiCall('/habits');
+            displayResult('get-habits-result', result);
+        }
+
+        async function testToggleCompletion() {
+            const habitId = document.getElementById('habit-id').value;
+            const today = new Date().toISOString().split('T')[0];
+            const result = await apiCall(`/habits/${habitId}/toggle`, 'POST', { date: today });
+            displayResult('toggle-result', result);
+        }
+
+        async function testGetStats() {
+            const result = await apiCall('/stats');
+            displayResult('stats-result', result);
+        }
+    </script>
+</body>
+</html>

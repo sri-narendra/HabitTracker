@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitFlow - Habit Management</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .habit-grid-container {
+            overflow-x: auto;
+            margin-top: 2rem;
+            padding-bottom: 1rem;
+        }
+        .habit-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.5rem;
+            min-width: 800px;
+        }
+        .habit-table th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .habit-row {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+        }
+        .habit-row td {
+            padding: 1rem;
+        }
+        .habit-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .habit-name { font-weight: 600; }
+        .habit-meta { font-size: 0.75rem; color: var(--text-secondary); }
+
+        .day-cell {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            background: var(--bg-tertiary);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+        }
+        .day-cell.completed {
+            background: #ffffff;
+            color: #000000;
+        }
+        .day-cell.today {
+            border: 2px solid #ffffff;
+        }
+        .day-cell:hover {
+            filter: brightness(1.2);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .xp-animation {
+            position: fixed;
+            pointer-events: none;
+            color: #ffffff;
+            font-weight: 800;
+            animation: floatUp 1s ease-out forwards;
+            z-index: 2000;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-50px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar glass">
+        <a href="habits.html" class="nav-logo">HabitFlow</a>
+        <div class="nav-links">
+            <a href="habits.html" class="nav-link active">Habits</a>
+            <a href="analytics.html" class="nav-link">Analytics</a>
+            <a href="tasks.html" class="nav-link">Tasks</a>
+            <a href="profile.html" class="nav-link">Profile</a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span class="status-text">Checking...</span>
+            </div>
+            <button id="theme-toggle" class="btn btn-outline" style="padding: 0.5rem;">🌓</button>
+            <button id="logout-btn" class="btn btn-outline" style="padding: 0.5rem 1rem;">Logout</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+                <h1>Habit Management</h1>
+                <p class="text-secondary">Track your consistency and grow.</p>
+            </div>
+            <button class="btn btn-primary" onclick="window.toggleModal('habit-modal')">+ Add Habit</button>
+        </header>
+
+        <section class="card glass">
+            <div class="calendar-header">
+                <h3 id="calendar-month-name">February 2026</h3>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-outline" style="padding: 0.25rem 0.5rem;" onclick="changeMonth(-1)"><</button>
+                    <button class="btn btn-outline" style="padding: 0.25rem 0.5rem;" onclick="changeMonth(1)">></button>
+                </div>
+            </div>
+
+            <div class="habit-grid-container">
+                <table class="habit-table">
+                    <thead>
+                        <tr id="calendar-header-row">
+                            <th>Habit</th>
+                            <!-- Days will be injected here -->
+                        </tr>
+                    </thead>
+                    <tbody id="habit-list">
+                        <!-- Habits and completion cells will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Habit Modal -->
+    <div id="habit-modal" class="modal-overlay" onclick="if(event.target === this) window.toggleModal('habit-modal', false)">
+        <div class="card modal-content">
+            <h2 id="modal-title">Add New Habit</h2>
+            <form id="habit-form" style="margin-top: 1.5rem;">
+                <input type="hidden" id="habit-id">
+                <div class="form-group">
+                    <label class="form-label">Name</label>
+                    <input type="text" id="habit-name" class="form-input" required placeholder="e.g. Read for 30 mins">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Category</label>
+                    <input type="text" id="habit-category" class="form-input" placeholder="e.g. Health, Learning">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Difficulty</label>
+                    <select id="habit-difficulty" class="form-input">
+                        <option value="Easy">Easy (+10 XP)</option>
+                        <option value="Medium">Medium (+25 XP)</option>
+                        <option value="Hard">Hard (+50 XP)</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="window.toggleModal('habit-modal', false)">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save Habit</button>
+                </div>
+                <button type="button" id="delete-habit-btn" class="btn" style="width: 100%; margin-top: 1rem; background: rgba(255, 255, 255, 0.1); color: #ffffff; display: none;">Delete Habit</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/habits.js"></script>
+</body>
+</html>

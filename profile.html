@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HabitFlow - Profile</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            color: white;
+            font-weight: 800;
+        }
+        .profile-info h1 { margin: 0; }
+        
+        .profile-section {
+            margin-bottom: 2rem;
+        }
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1.5rem;
+        }
+        .badge-item {
+            text-align: center;
+        }
+        .badge-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--bg-tertiary);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 0.5rem;
+            font-size: 1.5rem;
+            filter: grayscale(1);
+            opacity: 0.3;
+        }
+        .badge-item.earned .badge-icon {
+            filter: grayscale(0);
+            opacity: 1;
+            background: var(--bg-secondary);
+            border: 2px solid var(--accent-primary);
+        }
+        .badge-name { font-size: 0.75rem; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <nav class="navbar glass">
+        <a href="habits.html" class="nav-logo">HabitFlow</a>
+        <div class="nav-links">
+            <a href="habits.html" class="nav-link">Habits</a>
+            <a href="analytics.html" class="nav-link">Analytics</a>
+            <a href="tasks.html" class="nav-link">Tasks</a>
+            <a href="profile.html" class="nav-link active">Profile</a>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span class="status-text">Checking...</span>
+            </div>
+            <button id="theme-toggle" class="btn btn-outline" style="padding: 0.5rem;">🌓</button>
+            <button id="logout-btn" class="btn btn-outline" style="padding: 0.5rem 1rem;">Logout</button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="profile-header">
+            <div class="profile-avatar" id="avatar-initial">U</div>
+            <div class="profile-info">
+                <h1 id="profile-username">Username</h1>
+                <p id="profile-email" class="text-secondary">email@example.com</p>
+                <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                    <span class="btn btn-primary" id="profile-level" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">Level 1</span>
+                    <span class="btn btn-outline" id="profile-xp" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">0 XP</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem;">
+            <div class="card stat-card">
+                <div class="stat-value" id="stat-longest-streak">0</div>
+                <div class="stat-label">Best Streak</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-value" id="stat-total-completions">0</div>
+                <div class="stat-label">Total Completions</div>
+            </div>
+            <div class="card stat-card">
+                <div class="stat-value" id="stat-member-since">2026</div>
+                <div class="stat-label">Member Since</div>
+            </div>
+        </section>
+
+        <section class="profile-section">
+            <h3>Earned Badges</h3>
+            <div class="badge-grid" id="profile-badge-grid" style="margin-top: 1.5rem;">
+                <div class="badge-item earned">
+                    <div class="badge-icon">🎉</div>
+                    <div class="badge-name">Newcomer</div>
+                </div>
+                <!-- Other badges logic -->
+            </div>
+        </section>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/profile.js"></script>
+</body>
+</html>

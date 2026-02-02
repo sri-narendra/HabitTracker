@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Server Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+        }
+        button {
+            background: #fff;
+            color: #000;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        #result {
+            margin-top: 20px;
+            padding: 15px;
+            background: #1a1a1a;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <h1>Server Connection Test</h1>
+    <button onclick="testConnection()">Test Connection to http://localhost:3000/api/status</button>
+    <div id="result">Click the button to test...</div>
+
+    <script>
+        async function testConnection() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = 'Testing multiple URLs...\n\n';
+            
+            const urls = [
+                'http://localhost:3000/api/status',
+                'http://127.0.0.1:3000/api/status',
+                'http://0.0.0.0:3000/api/status'
+            ];
+            
+            for (const url of urls) {
+                resultDiv.textContent += `Testing: ${url}\n`;
+                
+                try {
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        mode: 'cors',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    const data = await response.json();
+                    
+                    resultDiv.textContent += `✅ SUCCESS with ${url}!\n`;
+                    resultDiv.textContent += `Status: ${response.status}\n`;
+                    resultDiv.textContent += `Response: ${JSON.stringify(data, null, 2)}\n\n`;
+                    resultDiv.style.color = '#10b981';
+                    break; // Stop on first success
+                } catch (error) {
+                    resultDiv.textContent += `❌ Failed with ${url}\n`;
+                    resultDiv.textContent += `Error: ${error.message}\n\n`;
+                }
+            }
+            
+            resultDiv.textContent += '\n=== Debugging Info ===\n';
+            resultDiv.textContent += `Current page URL: ${window.location.href}\n`;
+            resultDiv.textContent += `Protocol: ${window.location.protocol}\n`;
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            setTimeout(testConnection, 500);
+        });
+    </script>
+</body>
+</html>
