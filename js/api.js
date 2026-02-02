@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3000/api'; // Change to Render URL after deployment
+const API_BASE_URL = 'https://habittracker-sqyy.onrender.com/api'; // Change to Render URL after deployment
 
 const api = {
     async fetch(endpoint, options = {}) {
