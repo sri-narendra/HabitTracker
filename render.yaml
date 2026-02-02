@@ -1,0 +1,4 @@
+# Render Build Configuration
+
+buildCommand: cd backend && npm install
+startCommand: npm start

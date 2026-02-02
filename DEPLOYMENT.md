@@ -1,144 +1,44 @@
-# Deployment Guide - HabitFlow
+# Render Deployment Guide
 
-## Prerequisites
-- MongoDB Atlas account (or local MongoDB instance)
-- GitHub account
-- Render account
+## Environment Variables Required
 
----
+Set these in your Render dashboard (Environment tab):
 
-## Step 1: MongoDB Setup
+1. **MONGO_URI**
+   - Your MongoDB connection string
+   - Example: `mongodb+srv://username:password@cluster.mongodb.net/habittracker?retryWrites=true&w=majority`
 
-1. Create a free cluster on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Create a database user with read/write permissions
-3. Whitelist all IP addresses (0.0.0.0/0) for development, or specific IPs for production
-4. Copy your connection string (should look like):
-   ```
-   mongodb+srv://username:password@cluster.mongodb.net/habitflow?retryWrites=true&w=majority
-   ```
+2. **JWT_SECRET**
+   - A secure random string for JWT token signing
+   - Generate with: `node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"`
 
----
+3. **CLIENT_ORIGIN**
+   - Set to: `https://habittracker-sqyy.onrender.com`
 
-## Step 2: Backend Deployment (Render)
+4. **PORT** (Optional)
+   - Render sets this automatically, but you can override if needed
+   - Default: 10000
 
-1. **Push backend to GitHub**:
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git remote add origin <your-repo-url>
-   git push -u origin main
-   ```
+## Build Settings
 
-2. **Create a new Web Service on Render**:
-   - Connect your GitHub repository
-   - **Root Directory**: `backend`
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm start`
+In your Render dashboard, configure:
 
-3. **Add Environment Variables** in Render dashboard:
-   ```
-   MONGO_URI=<your-mongodb-connection-string>
-   JWT_SECRET=<generate-a-secure-random-string>
-   CLIENT_ORIGIN=https://<your-username>.github.io/<repo-name>
-   PORT=5000
-   ```
+- **Build Command**: `cd backend && npm install`
+- **Start Command**: `npm start`
+- **Root Directory**: Leave blank (uses repository root)
 
-4. **Deploy** and note your backend URL (e.g., `https://habitflow-backend.onrender.com`)
+## After Deployment
 
----
-
-## Step 3: Frontend Configuration
-
-1. **Update API Base URL** in `js/api.js`:
-   ```javascript
-   const API_BASE_URL = 'https://habitflow-backend.onrender.com/api';
-   ```
-
-2. **Commit the change**:
-   ```bash
-   git add js/api.js
-   git commit -m "Update API URL for production"
-   git push
-   ```
-
----
-
-## Step 4: Frontend Deployment (GitHub Pages)
-
-1. Go to your repository **Settings** → **Pages**
-2. **Source**: Deploy from a branch
-3. **Branch**: `main` / `root`
-4. **Save**
-
-Your app will be live at: `https://<your-username>.github.io/<repo-name>`
-
----
-
-## Step 5: Update CORS in Backend
-
-Once you have your GitHub Pages URL, update the `CLIENT_ORIGIN` environment variable in Render to match it exactly.
-
----
-
-## Local Development
-
-### Backend
-```bash
-cd backend
-npm install
-# Create .env file with local MongoDB URI
-npm run dev
-```
-
-### Frontend
-Use Live Server or any static file server:
-```bash
-# Using Python
-python -m http.server 5500
-
-# Or use VS Code Live Server extension
-```
-
----
-
-## Environment Variables Reference
-
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `MONGO_URI` | MongoDB connection string | `mongodb+srv://user:pass@cluster.mongodb.net/habitflow` |
-| `JWT_SECRET` | Secret key for JWT signing | `your_super_secret_key_min_32_chars` |
-| `CLIENT_ORIGIN` | Frontend URL (for CORS) | `https://yourusername.github.io/habitflow` |
-| `PORT` | Server port (Render sets this automatically) | `5000` |
-
----
+1. Wait for the build to complete
+2. Check the logs for any errors
+3. Visit `https://habittracker-sqyy.onrender.com` to test
+4. The login page should load
+5. Test signup/login functionality
 
 ## Troubleshooting
 
-### Backend won't start
-- Check MongoDB connection string is correct
-- Ensure all environment variables are set in Render
-- Check Render logs for specific errors
-
-### Frontend can't connect to backend
-- Verify `API_BASE_URL` in `js/api.js` matches your Render URL
-- Check CORS settings: `CLIENT_ORIGIN` must match your GitHub Pages URL exactly
-- Open browser console to see specific error messages
-
-### 401 Unauthorized errors
-- Clear browser localStorage and try logging in again
-- Check that JWT_SECRET is set in backend environment variables
-
----
-
-## Production Checklist
-
-- [ ] MongoDB Atlas cluster created and connection string obtained
-- [ ] Backend deployed to Render with all environment variables
-- [ ] Frontend `js/api.js` updated with production backend URL
-- [ ] GitHub Pages enabled and site is accessible
-- [ ] CORS `CLIENT_ORIGIN` matches GitHub Pages URL
-- [ ] Test signup/login flow
-- [ ] Test habit creation and completion
-- [ ] Verify analytics calculations
-- [ ] Test on mobile devices
+If you still see 404 errors:
+1. Check Render logs for startup errors
+2. Verify all environment variables are set
+3. Ensure MongoDB connection string is correct
+4. Check that the build completed successfully
