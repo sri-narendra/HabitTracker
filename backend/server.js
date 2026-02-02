@@ -13,8 +13,26 @@ app.set('trust proxy', 1);
 
 // Middleware
 app.use(express.json());
+// CORS Configuration
+const allowedOrigins = [
+    'http://127.0.0.1:5500', 
+    'http://localhost:5500', 
+    'https://habittracker-sqyy.onrender.com'
+];
+
 app.use(cors({
-    origin: process.env.CLIENT_ORIGIN || '*',
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        // Check if origin is allowed
+        if (allowedOrigins.indexOf(origin) !== -1 || process.env.CLIENT_ORIGIN === '*') {
+            callback(null, true);
+        } else {
+            console.log('Blocked by CORS:', origin);
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
