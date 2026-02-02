@@ -67,9 +67,27 @@ app.get('*', (req, res) => {
 });
 
 // Database Connection
-mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log('MongoDB Connected'))
-    .catch(err => console.error('MongoDB Connection Error:', err));
+const connectDB = async () => {
+    try {
+        const conn = await mongoose.connect(process.env.MONGO_URI, {
+            serverSelectionTimeoutMS: 5000 // Timeout after 5s instead of 30s
+        });
+        console.log(`MongoDB Connected: ${conn.connection.host}`);
+    } catch (err) {
+        console.error('MongoDB Connection Error:', err);
+        // Do not exit process, let Render restart it or just log the error
+    }
+};
+
+mongoose.connection.on('error', err => {
+    console.error('MongoDB Runtime Error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+    console.log('MongoDB Disconnected');
+});
+
+connectDB();
 
 // Global Error Handler
 app.use(errorHandler);
