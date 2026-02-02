@@ -1,125 +1,148 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HabitFlow - Temporary Tasks</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        .task-list {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            margin-top: 2rem;
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>HabitFlow - Tasks</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#19e65e",
+                        "background-dark": "#000000",
+                        "surface-dark": "#0A0A0A",
+                        "border-dark": "#1A1A1A",
+                        "accent-grey": "#888888",
+                        "day-highlight": "#1a365d",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "sans": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
         }
-        .task-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: var(--bg-secondary);
-            padding: 1rem;
-            border-radius: var(--radius-sm);
-            transition: var(--transition);
+    </script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Manrope', sans-serif;
         }
-        .task-item.completed {
-            opacity: 0.6;
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .task-item.completed .task-title {
-            text-decoration: line-through;
-            color: var(--text-secondary);
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
         }
-        .task-checkbox {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
+        
+        /* Modal Logic */
+        .modal-overlay.active {
+            display: flex !important;
         }
-        .task-title {
-            flex: 1;
-            font-weight: 500;
-        }
-        .task-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-        .task-filters {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-        .filter-btn {
-            background: none;
-            color: var(--text-secondary);
-            font-weight: 600;
-            padding: 0.25rem 0.5rem;
-            border-bottom: 2px solid transparent;
-        }
-        .filter-btn.active {
-            color: #ffffff;
-            border-bottom-color: #ffffff;
+
+        /* Filter Logic */
+        .filter-btn.active, .filter-btn.active:hover {
+            background-color: white;
+            color: black !important;
+            border-color: white;
         }
     </style>
 </head>
-<body>
-    <nav class="navbar glass">
-        <a href="habits.html" class="nav-logo">HabitFlow</a>
-        <div class="nav-links">
-            <a href="habits.html" class="nav-link">Habits</a>
-            <a href="analytics.html" class="nav-link">Analytics</a>
-            <a href="tasks.html" class="nav-link active">Tasks</a>
-            <a href="profile.html" class="nav-link">Profile</a>
-        </div>
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <div class="status-indicator">
-                <span class="status-dot"></span>
-                <span class="status-text">Checking...</span>
-            </div>
-            <button id="theme-toggle" class="btn btn-outline" style="padding: 0.5rem;">🌓</button>
-            <button id="logout-btn" class="btn btn-outline" style="padding: 0.5rem 1rem;">Logout</button>
-        </div>
-    </nav>
+<body class="bg-white dark:bg-background-dark text-slate-900 dark:text-white min-h-screen selection:bg-primary/30">
 
-    <main class="container">
-        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <!-- Top Navigation Bar -->
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-border-dark px-10 py-3 bg-white dark:bg-background-dark sticky top-0 z-50">
+        <div class="flex items-center gap-8">
+            <a href="habits.html" class="flex items-center gap-3 text-primary">
+                <div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+                    <span class="material-symbols-outlined text-primary filled-icon">bolt</span>
+                </div>
+                <h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">HabitFlow</h2>
+            </a>
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="habits.html">Habit Management</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="analytics.html">Analytics</a>
+                <a class="text-slate-900 dark:text-white border-b-2 border-primary pb-1 text-sm font-medium" href="tasks.html">Tasks</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="profile.html">Profile</a>
+            </nav>
+        </div>
+        <div class="flex items-center gap-4">
+            <button id="theme-toggle" class="p-2 text-slate-400 hover:text-white">
+                <span class="material-symbols-outlined">dark_mode</span>
+            </button>
+            <button id="logout-btn" class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                <span class="material-symbols-outlined">logout</span>
+            </button>
+            <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border border-border-dark" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBETW5x4_Pr3ioo-z6pKB-yOQ2ACbKduJviH988JOQCl-hXWiMdJeWH7DEyFVY9DVBMSei4c6Z6TVLilYKVPnBhLekD56dl3ASkEjzHy_9EQFuK7ELluNvNPMMxqAZMQq2e6m6TvcRZfPjP228MN50weFLCezGkbFHaGWlQPsDqv4DIjRNILxNus-OwIHOmeRYYHG0Ffv4ItO8bBgIN-hFJEWF3MedD0w-KEu8hevefkqIuceFHiNZ5XU2emXz8ha4tz_7JaFU6A-0");'></div>
+        </div>
+    </header>
+
+
+    <main class="max-w-[1600px] mx-auto px-6 py-8 space-y-8">
+        <header class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-4 border-b border-border-dark/50">
             <div>
-                <h1>Temporary Tasks</h1>
-                <p class="text-secondary">Quick to-dos, not part of your habits.</p>
+                <div class="flex items-center gap-3 mb-2">
+                    <h2 class="text-4xl font-black tracking-tight">Temporary Tasks</h2>
+                    <span class="px-3 py-1 bg-surface-dark border border-border-dark rounded-full text-[10px] font-black text-accent-grey uppercase tracking-widest">To-Dos</span>
+                </div>
+                <p class="text-accent-grey font-medium">Quick tasks and errands outside your habit protocols.</p>
             </div>
-            <button class="btn btn-primary" onclick="window.toggleModal('task-modal')">+ Add Task</button>
+            
+            <button class="px-6 py-3 bg-primary text-black font-black uppercase rounded-xl hover:scale-105 transition-all shadow-lg shadow-primary/20" onclick="window.toggleModal('task-modal')">
+                + Create Task
+            </button>
         </header>
 
-        <section class="task-filters">
-            <button class="filter-btn active" onclick="setFilter('all')">All</button>
-            <button class="filter-btn" onclick="setFilter('active')">Active</button>
-            <button class="filter-btn" onclick="setFilter('completed')">Completed</button>
+        <!-- Filters -->
+        <section class="flex gap-2">
+            <button class="filter-btn active px-4 py-2 bg-white dark:bg-black border border-slate-200 dark:border-border-dark rounded-lg text-xs font-black uppercase text-slate-500 dark:text-accent-grey hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-white transition-all" onclick="setFilter('all')" data-filter="all">All Tasks</button>
+            <button class="filter-btn px-4 py-2 bg-white dark:bg-black border border-slate-200 dark:border-border-dark rounded-lg text-xs font-black uppercase text-slate-500 dark:text-accent-grey hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-white transition-all" onclick="setFilter('active')" data-filter="active">Pending</button>
+            <button class="filter-btn px-4 py-2 bg-white dark:bg-black border border-slate-200 dark:border-border-dark rounded-lg text-xs font-black uppercase text-slate-500 dark:text-accent-grey hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-white transition-all" onclick="setFilter('completed')" data-filter="completed">Completed</button>
         </section>
 
-        <section id="task-list" class="task-list">
-            <!-- Tasks will be injected here -->
+        <!-- Task List -->
+        <section id="task-list" class="space-y-3">
+            <!-- Injected via JS -->
         </section>
     </main>
 
     <!-- Task Modal -->
-    <div id="task-modal" class="modal-overlay" onclick="if(event.target === this) window.toggleModal('task-modal', false)">
-        <div class="card modal-content">
-            <h2 id="modal-title">Add New Task</h2>
-            <form id="task-form" style="margin-top: 1.5rem;">
+    <div id="task-modal" class="modal-overlay fixed inset-0 z-[200] hidden items-center justify-center bg-black/90 backdrop-blur-sm p-4" onclick="if(event.target === this) window.toggleModal('task-modal', false)">
+        <div class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden animate-[fadeIn_0.2s_ease-out]">
+            <div class="p-6 border-b border-slate-200 dark:border-border-dark flex justify-between items-center">
+                <h3 id="modal-title" class="text-xl font-bold text-slate-900 dark:text-white">Create Task</h3>
+                <button class="text-accent-grey hover:text-white" onclick="window.toggleModal('task-modal', false)">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            
+            <form id="task-form" class="p-8 space-y-6">
                 <input type="hidden" id="task-id">
-                <div class="form-group">
-                    <label class="form-label">Task Description</label>
-                    <input type="text" id="task-title" class="form-input" required placeholder="e.g. Buy groceries">
+                <div>
+                    <label class="block text-xs font-black uppercase tracking-widest text-accent-grey mb-2">Task Description</label>
+                    <input type="text" id="task-title" required class="w-full bg-slate-50 dark:bg-black border border-slate-200 dark:border-border-dark rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-600 outline-none" placeholder="e.g. Buy supplements">
                 </div>
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="window.toggleModal('task-modal', false)">Cancel</button>
-                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save Task</button>
+                
+                <div class="grid grid-cols-2 gap-4 pt-2">
+                    <button type="button" class="py-3 px-4 bg-transparent border border-slate-200 dark:border-border-dark text-slate-500 dark:text-accent-grey hover:text-slate-900 dark:hover:text-white hover:border-slate-400 dark:hover:border-white font-bold rounded-xl transition-all" onclick="window.toggleModal('task-modal', false)">Cancel</button>
+                    <button type="submit" class="py-3 px-4 bg-primary text-black font-black rounded-xl hover:scale-[1.01] active:scale-95 transition-all">Save Task</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- Scripts -->
     <script src="js/api.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/tasks.js"></script>

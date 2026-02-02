@@ -1,169 +1,260 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HabitFlow - Progress & Analytics</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>HabitFlow - Analytics</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#19e65e",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#0a0a0a",
+                        "card-dark": "#161b18",
+                        "border-dark": "#2a332d",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
     <style>
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+        body {
+            font-family: 'Manrope', sans-serif;
         }
-        .stat-card {
-            text-align: center;
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .stat-value { font-size: 2rem; font-weight: 800; color: var(--accent-primary); }
-        .stat-label { font-size: 0.875rem; color: var(--text-secondary); }
-
-        .xp-bar-container {
-            width: 100%;
-            height: 12px;
-            background: var(--bg-tertiary);
-            border-radius: 6px;
-            margin: 1rem 0;
-            overflow: hidden;
-        }
-        .xp-bar-fill {
-            height: 100%;
-            background: #ffffff;
-            width: 0%;
-            transition: width 1s ease-in-out;
-        }
-
-        .chart-container {
-            height: 300px;
-            margin-top: 2rem;
-            position: relative;
-        }
-        .heatmap {
-            display: grid;
-            grid-template-columns: repeat(var(--cols, 7), 1fr);
-            gap: 4px;
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
         }
         .heatmap-cell {
-            aspect-ratio: 1;
-            background: var(--bg-tertiary);
+            aspect-ratio: 1/1;
+            width: 12px;
             border-radius: 2px;
-        }
-        .heatmap-cell.active { background: #ffffff; }
-        
-        .badge-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        .badge {
-            width: 80px;
-            height: 80px;
-            background: var(--bg-tertiary);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 2rem;
-            filter: grayscale(1);
-            opacity: 0.5;
-            transition: var(--transition);
-        }
-        .badge.earned {
-            filter: grayscale(0);
-            opacity: 1;
-            background: #ffffff;
-            color: #000000;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
-<body>
-    <nav class="navbar glass">
-        <a href="habits.html" class="nav-logo">HabitFlow</a>
-        <div class="nav-links">
-            <a href="habits.html" class="nav-link">Habits</a>
-            <a href="analytics.html" class="nav-link active">Analytics</a>
-            <a href="tasks.html" class="nav-link">Tasks</a>
-            <a href="profile.html" class="nav-link">Profile</a>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white min-h-screen">
+<div class="layout-container flex h-full grow flex-col">
+    <!-- Top Navigation Bar -->
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-border-dark px-10 py-3 bg-white dark:bg-background-dark sticky top-0 z-50">
+        <div class="flex items-center gap-8">
+            <a href="habits.html" class="flex items-center gap-3 text-primary">
+                <div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+                    <span class="material-symbols-outlined text-primary filled-icon">bolt</span>
+                </div>
+                <h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">HabitFlow</h2>
+            </a>
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="habits.html">Habit Management</a>
+                <a class="text-slate-900 dark:text-white border-b-2 border-primary pb-1 text-sm font-medium" href="analytics.html">Analytics</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="tasks.html">Tasks</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="profile.html">Profile</a>
+            </nav>
         </div>
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <div class="status-indicator">
-                <span class="status-dot"></span>
-                <span class="status-text">Checking...</span>
-            </div>
-            <button id="theme-toggle" class="btn btn-outline" style="padding: 0.5rem;">🌓</button>
-            <button id="logout-btn" class="btn btn-outline" style="padding: 0.5rem 1rem;">Logout</button>
+        <div class="flex items-center gap-4">
+            <button id="theme-toggle" class="p-2 text-slate-400 hover:text-white">
+                <span class="material-symbols-outlined">dark_mode</span>
+            </button>
+            <button id="logout-btn" class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                <span class="material-symbols-outlined">logout</span>
+            </button>
+            <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border border-border-dark" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBETW5x4_Pr3ioo-z6pKB-yOQ2ACbKduJviH988JOQCl-hXWiMdJeWH7DEyFVY9DVBMSei4c6Z6TVLilYKVPnBhLekD56dl3ASkEjzHy_9EQFuK7ELluNvNPMMxqAZMQq2e6m6TvcRZfPjP228MN50weFLCezGkbFHaGWlQPsDqv4DIjRNILxNus-OwIHOmeRYYHG0Ffv4ItO8bBgIN-hFJEWF3MedD0w-KEu8hevefkqIuceFHiNZ5XU2emXz8ha4tz_7JaFU6A-0");'></div>
         </div>
-    </nav>
+    </header>
 
-    <main class="container">
-        <header style="margin-bottom: 2rem;">
-            <h1>Progress & Analytics</h1>
-            <p class="text-secondary">Visualize your journey to excellence.</p>
-        </header>
-
-        <section class="stats-grid">
-            <div class="card stat-card">
-                <div class="stat-value" id="current-level">1</div>
-                <div class="stat-label">Current Level</div>
-                <div class="xp-bar-container">
-                    <div class="xp-bar-fill" id="xp-bar"></div>
+    <main class="max-w-[1200px] mx-auto w-full p-6 md:p-10 space-y-8">
+        <!-- Page Heading & Progress -->
+        <div class="space-y-6">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div class="flex flex-col gap-1">
+                    <h1 class="text-slate-900 dark:text-white text-3xl font-extrabold tracking-tight">Your Progress Overview</h1>
+                    <p class="text-slate-500 dark:text-slate-400 text-base">Track your journey and celebrate your achievements.</p>
                 </div>
-                <div class="stat-label" id="xp-text">0 / 1000 XP</div>
-            </div>
-            <div class="card stat-card">
-                <div class="stat-value" id="current-streak">0</div>
-                <div class="stat-label">Current Streak</div>
-            </div>
-            <div class="card stat-card">
-                <div class="stat-value" id="longest-streak">0</div>
-                <div class="stat-label">Longest Streak</div>
-            </div>
-            <div class="card stat-card">
-                <div class="stat-value" id="total-completions">0</div>
-                <div class="stat-label">Total Completed</div>
-            </div>
-        </section>
-
-        <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 2rem;">
-            <div class="card">
-                <h3>Habit Consistency</h3>
-                <div id="consistency-chart" class="chart-container">
-                    <!-- SVG Chart will be injected here -->
+                <div class="flex items-center gap-3 bg-card-dark border border-border-dark rounded-xl px-4 py-2">
+                    <span class="material-symbols-outlined text-primary filled-icon">military_tech</span>
+                    <span class="text-sm font-bold" id="user-level">Lvl 1</span>
                 </div>
             </div>
-            <div class="card">
-                <h3>Streak Heatmap (Last 30 Days)</h3>
-                <div id="heatmap" class="heatmap" style="margin-top: 1.5rem;">
-                    <!-- Heatmap cells will be injected here -->
+            
+            <!-- Progress Bar -->
+            <div class="bg-slate-100 dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl p-5">
+                <div class="flex justify-between items-end mb-3">
+                    <div class="flex flex-col">
+                        <span class="text-xs uppercase tracking-widest text-slate-400 font-bold">Current XP</span>
+                        <span class="text-lg font-bold" id="xp-display">0 / 1000 XP</span>
+                    </div>
+                    <span class="text-primary text-sm font-bold" id="xp-percentage">0% to Next Level</span>
+                </div>
+                <div class="h-3 w-full bg-slate-200 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-primary rounded-full transition-all duration-500" id="xp-bar" style="width: 0%"></div>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <section class="card" style="margin-top: 2rem;">
-            <h3>Achievements & Badges</h3>
-            <div class="badge-grid">
-                <div class="badge earned" title="Early Bird: Complete your first habit">🐣</div>
-                <div class="badge" id="badge-streak-7" title="Week Warrior: 7 Day Streak">🔥</div>
-                <div class="badge" id="badge-streak-30" title="Month Master: 30 Day Streak">🥇</div>
-                <div class="badge" id="badge-level-10" title="Pro Trax: Reach Level 10">💎</div>
-                <div class="badge" id="badge-all-checked" title="Perfectionist: Complete all habits in one day">✨</div>
+        <!-- Metric Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="flex flex-col gap-2 rounded-xl p-6 border border-slate-200 dark:border-border-dark bg-white dark:bg-card-dark">
+                <div class="flex justify-between items-start">
+                    <p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Current Streak</p>
+                    <span class="material-symbols-outlined text-orange-500 filled-icon">local_fire_department</span>
+                </div>
+                <p class="text-slate-900 dark:text-white tracking-tight text-3xl font-bold leading-tight" id="current-streak">0 Days</p>
+                <p class="text-slate-400 text-sm font-medium" id="streak-change">Starting fresh</p>
             </div>
-        </section>
+            
+            <div class="flex flex-col gap-2 rounded-xl p-6 border border-slate-200 dark:border-border-dark bg-white dark:bg-card-dark">
+                <div class="flex justify-between items-start">
+                    <p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Longest Streak</p>
+                    <span class="material-symbols-outlined text-yellow-500 filled-icon">workspace_premium</span>
+                </div>
+                <p class="text-slate-900 dark:text-white tracking-tight text-3xl font-bold leading-tight" id="longest-streak">0 Days</p>
+                <p class="text-slate-400 text-sm font-medium">All-time record</p>
+            </div>
+            
+            <div class="flex flex-col gap-2 rounded-xl p-6 border border-slate-200 dark:border-border-dark bg-white dark:bg-card-dark">
+                <div class="flex justify-between items-start">
+                    <p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Total Habits</p>
+                    <span class="material-symbols-outlined text-blue-500 filled-icon">format_list_bulleted</span>
+                </div>
+                <p class="text-slate-900 dark:text-white tracking-tight text-3xl font-bold leading-tight" id="total-habits">0 Active</p>
+                <p class="text-slate-400 text-sm font-medium" id="habits-change">Get started</p>
+            </div>
+            
+            <div class="flex flex-col gap-2 rounded-xl p-6 border border-slate-200 dark:border-border-dark bg-white dark:bg-card-dark">
+                <div class="flex justify-between items-start">
+                    <p class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Completion Rate</p>
+                    <span class="material-symbols-outlined text-primary filled-icon">check_circle</span>
+                </div>
+                <p class="text-slate-900 dark:text-white tracking-tight text-3xl font-bold leading-tight" id="completion-rate">0%</p>
+                <p class="text-slate-400 text-sm font-medium" id="completion-trend">This month</p>
+            </div>
+        </div>
 
-        <section style="margin-top: 2rem; display: flex; gap: 1rem;">
-            <button class="btn btn-outline" id="export-csv">Export Data (CSV)</button>
-            <button class="btn btn-outline" id="export-image">Export Summary (Image)</button>
-        </section>
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Habit Consistency (Bar Chart) -->
+            <div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-lg">Habit Consistency</h3>
+                    <div class="flex h-8 bg-slate-100 dark:bg-background-dark p-1 rounded-lg">
+                        <button class="px-3 text-xs font-bold rounded-md bg-white dark:bg-card-dark shadow-sm" data-period="daily">Daily</button>
+                        <button class="px-3 text-xs font-medium text-slate-500 hover:text-primary transition-colors" data-period="weekly">Weekly</button>
+                    </div>
+                </div>
+                <div id="consistency-chart" class="flex items-end justify-between h-48 gap-2 pt-4">
+                    <!-- Dynamic bars will be inserted here -->
+                </div>
+                <div id="consistency-labels" class="flex justify-between mt-4 text-[10px] uppercase font-bold text-slate-500 tracking-tighter">
+                    <!-- Dynamic labels will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Performance Trends (Line Chart) -->
+            <div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-lg">Performance Trends</h3>
+                    <span class="text-xs text-slate-400 font-medium">Last 30 Days</span>
+                </div>
+                <div class="relative h-48 w-full border-l border-b border-slate-200 dark:border-border-dark">
+                    <svg id="trend-chart" class="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 100">
+                        <!-- Dynamic path will be inserted here -->
+                    </svg>
+                    <div class="absolute inset-0 flex flex-col justify-between pointer-events-none">
+                        <div class="w-full border-t border-slate-100 dark:border-border-dark/30"></div>
+                        <div class="w-full border-t border-slate-100 dark:border-border-dark/30"></div>
+                        <div class="w-full border-t border-slate-100 dark:border-border-dark/30"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-4 text-[10px] font-bold text-slate-500">
+                    <span>Day 1</span>
+                    <span>Day 15</span>
+                    <span>Today</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Heatmap -->
+        <div class="bg-white dark:bg-card-dark border border-slate-200 dark:border-border-dark rounded-xl p-6 overflow-hidden">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+                <div>
+                    <h3 class="font-bold text-lg">Activity Heatmap</h3>
+                    <p class="text-xs text-slate-400">Completion density for the past year</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-[10px] text-slate-400 font-bold uppercase">Less</span>
+                    <div class="heatmap-cell bg-slate-100 dark:bg-background-dark"></div>
+                    <div class="heatmap-cell bg-primary/20"></div>
+                    <div class="heatmap-cell bg-primary/40"></div>
+                    <div class="heatmap-cell bg-primary/70"></div>
+                    <div class="heatmap-cell bg-primary"></div>
+                    <span class="text-[10px] text-slate-400 font-bold uppercase">More</span>
+                </div>
+            </div>
+            <div class="overflow-x-auto pb-4">
+                <div id="heatmap-grid" class="flex gap-1 min-w-max">
+                    <!-- Dynamic heatmap will be inserted here -->
+                </div>
+                <div class="flex justify-between mt-3 text-[10px] font-bold text-slate-500 uppercase tracking-tighter w-full min-w-max">
+                    <span class="w-[4%]">Jan</span>
+                    <span class="w-[8%]">Feb</span>
+                    <span class="w-[8%]">Mar</span>
+                    <span class="w-[8%]">Apr</span>
+                    <span class="w-[8%]">May</span>
+                    <span class="w-[8%]">Jun</span>
+                    <span class="w-[8%]">Jul</span>
+                    <span class="w-[8%]">Aug</span>
+                    <span class="w-[8%]">Sep</span>
+                    <span class="w-[8%]">Oct</span>
+                    <span class="w-[8%]">Nov</span>
+                    <span class="w-[8%]">Dec</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badges & Achievements -->
+        <div class="space-y-6">
+            <div class="flex justify-between items-center">
+                <h3 class="font-bold text-xl">Badges & Achievements</h3>
+            </div>
+            <div id="badges-grid" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <!-- Dynamic badges will be inserted here -->
+            </div>
+        </div>
     </main>
 
-    <script src="js/api.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/analytics.js"></script>
+    <footer class="border-t border-slate-200 dark:border-border-dark mt-10 py-10 px-10">
+        <div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-2 opacity-50">
+                <span class="material-symbols-outlined text-sm filled-icon">bolt</span>
+                <p class="text-xs font-bold uppercase tracking-widest">HabitFlow</p>
+            </div>
+            <div class="flex gap-6">
+                <a class="text-slate-500 hover:text-primary text-xs font-medium" href="#">Privacy Policy</a>
+                <a class="text-slate-500 hover:text-primary text-xs font-medium" href="#">Terms of Service</a>
+                <a class="text-slate-500 hover:text-primary text-xs font-medium" href="#">Help Center</a>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/analytics.js"></script>
 </body>
 </html>

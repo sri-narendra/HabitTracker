@@ -15,40 +15,57 @@ function injectLoadingSpinner() {
 
 function initTheme() {
     const theme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.classList.toggle('dark', theme === 'dark');
     
-    // Theme toggle button logic (assuming it has id theme-toggle)
+    // Update icon based on current theme
     const toggleBtn = document.getElementById('theme-toggle');
     if (toggleBtn) {
+        const icon = toggleBtn.querySelector('.material-symbols-outlined');
+        if (icon) {
+            icon.textContent = theme === 'dark' ? 'light_mode' : 'dark_mode';
+        }
+        
         toggleBtn.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
+            const isDark = document.documentElement.classList.toggle('dark');
+            const newTheme = isDark ? 'dark' : 'light';
             localStorage.setItem('theme', newTheme);
+            
+            // Update icon
+            if (icon) {
+                icon.textContent = isDark ? 'light_mode' : 'dark_mode';
+            }
         });
     }
 }
 
 function initNavbar() {
-    const nav = document.querySelector('.navbar');
-    if (!nav) return;
-
-    // Highlight active link
-    const path = window.location.pathname;
-    const links = document.querySelectorAll('.nav-link');
-    links.forEach(link => {
-        if (path.includes(link.getAttribute('href'))) {
-            link.classList.add('active');
-        }
-    });
-
-    // Logout logic
+    // Logout logic - specific to ID, running independently of nav classes
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', (e) => {
             e.preventDefault();
+            console.log('Logout button clicked');
+            
+            // Clear all auth-related data
             localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            
+            // Redirect to login page
+            console.log('Redirecting to index.html');
             window.location.href = 'index.html';
+        });
+    } else {
+        console.warn('Logout button not found');
+    }
+
+    // Highlight active link - Legacy support or if classes are added back
+    const links = document.querySelectorAll('.nav-link');
+    if (links.length > 0) {
+        const path = window.location.pathname;
+        links.forEach(link => {
+            if (path.includes(link.getAttribute('href'))) {
+                link.classList.add('active');
+            }
         });
     }
 }
@@ -75,7 +92,12 @@ async function checkServerStatus() {
 window.toggleModal = (id, show = true) => {
     const modal = document.getElementById(id);
     if (modal) {
-        if (show) modal.classList.add('active');
-        else modal.classList.remove('active');
+        if (show) {
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        } else {
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
     }
 };

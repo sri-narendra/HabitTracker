@@ -1,104 +1,135 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <title>HabitFlow - Login / Signup</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        .auth-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 1rem;
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#19e65e",
+                        "background-dark": "#000000",
+                        "surface-dark": "#0A0A0A",
+                        "border-dark": "#1A1A1A",
+                        "accent-grey": "#888888",
+                        "day-highlight": "#1a365d",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "sans": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
         }
-        .auth-card {
-            width: 100%;
-            max-width: 400px;
-            padding: 2.5rem;
+    </script>
+    <style type="text/tailwindcss">
+        input[type="password"] {
+            color: white !important;
+        } 
+        body {
+            font-family: 'Manrope', sans-serif;
+            background-color: #000000;
         }
-        .auth-tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        
+        /* Compatibility classes for JS logic */
         .auth-tab {
-            flex: 1;
-            padding: 0.5rem;
-            text-align: center;
-            font-weight: 600;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            color: var(--text-secondary);
-            transition: var(--transition);
+            @apply text-accent-grey border-b-2 border-transparent cursor-pointer transition-colors hover:text-white px-6 py-3 font-bold uppercase tracking-wider text-xs;
         }
         .auth-tab.active {
-            color: var(--accent-primary);
-            border-bottom-color: var(--accent-primary);
+            @apply text-primary border-primary;
         }
         .auth-form {
             display: none;
         }
         .auth-form.active {
             display: block;
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body>
-    <div class="auth-container">
-        <div class="card auth-card glass">
-            <div style="text-align: center; margin-bottom: 2rem;">
-                <h1 class="nav-logo">HabitFlow</h1>
-                <p class="text-secondary">Master your habits, master your life.</p>
+<body class="bg-background-dark text-white min-h-screen flex items-center justify-center selection:bg-primary/30 p-4">
+    
+    <div class="w-full max-w-md">
+        <div class="text-center mb-10">
+            <div class="flex items-center justify-center gap-2 mb-4">
+                <div class="size-10 flex items-center justify-center bg-primary rounded-xl text-black">
+                    <span class="material-symbols-outlined filled-icon">bolt</span>
+                </div>
+                <h1 class="text-2xl font-black tracking-tighter">HABITFLOW</h1>
             </div>
+            <p class="text-accent-grey font-medium text-sm">Master your habits, master your life.</p>
+        </div>
 
-            <div class="auth-tabs">
+        <div class="bg-surface-dark border border-border-dark rounded-2xl shadow-2xl overflow-hidden p-8">
+            <div class="auth-tabs flex justify-center border-b border-border-dark mb-8">
                 <div class="auth-tab active" onclick="switchTab('login')">Login</div>
                 <div class="auth-tab" onclick="switchTab('signup')">Sign Up</div>
             </div>
 
-            <form id="login-form" class="auth-form active">
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="login-email" required placeholder="name@example.com">
+            <!-- Login Form -->
+            <form id="login-form" class="auth-form active space-y-6">
+                <div>
+                    <label class="block text-xs font-black uppercase tracking-widest text-accent-grey mb-2">Email Address</label>
+                    <input type="email" id="login-email" required placeholder="name@example.com" class="w-full bg-black border border-border-dark rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary transition-all text-white placeholder:text-neutral-600 outline-none">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" id="login-password" required placeholder="Enter your password">
+                <div>
+                    <label class="block text-xs font-black uppercase tracking-widest text-accent-grey mb-2">Password</label>
+                    <input type="password" id="login-password" required placeholder="Enter password" class="w-full bg-black border border-border-dark rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary transition-all text-white placeholder:text-neutral-600 outline-none">
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Login</button>
+                <button type="submit" class="w-full py-4 bg-primary text-black font-black rounded-xl hover:scale-[1.01] active:scale-95 transition-all mt-4 uppercase tracking-wide text-sm">Login System</button>
             </form>
 
-            <form id="signup-form" class="auth-form">
-                <div class="form-group">
-                    <label class="form-label">Username</label>
-                    <input type="text" class="form-input" id="signup-username" required placeholder="johndoe">
+            <!-- Signup Form -->
+            <form id="signup-form" class="auth-form space-y-5">
+                <div>
+                    <label class="block text-xs font-black uppercase tracking-widest text-accent-grey mb-2">Username</label>
+                    <input type="text" id="signup-username" required placeholder="Display Name" class="w-full bg-black border border-border-dark rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary transition-all text-white placeholder:text-neutral-600 outline-none">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="signup-email" required placeholder="name@example.com">
+                <div>
+                    <label class="block text-xs font-black uppercase tracking-widest text-accent-grey mb-2">Email Address</label>
+                    <input type="email" id="signup-email" required placeholder="name@example.com" class="w-full bg-black border border-border-dark rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary transition-all text-white placeholder:text-neutral-600 outline-none">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" id="signup-password" required placeholder="Min 6 characters">
+                <div>
+                    <label class="block text-xs font-black uppercase tracking-widest text-accent-grey mb-2">Password</label>
+                    <input type="password" id="signup-password" required placeholder="Min 6 characters" class="w-full bg-black border border-border-dark rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary transition-all text-white placeholder:text-neutral-600 outline-none">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Confirm Password</label>
-                    <input type="password" class="form-input" id="signup-confirm" required placeholder="Confirm your password">
+                <div>
+                    <label class="block text-xs font-black uppercase tracking-widest text-accent-grey mb-2">Confirm Password</label>
+                    <input type="password" id="signup-confirm" required placeholder="Repeat password" class="w-full bg-black border border-border-dark rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary transition-all text-white placeholder:text-neutral-600 outline-none">
                 </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Create Account</button>
+                <button type="submit" class="w-full py-4 bg-primary text-black font-black rounded-xl hover:scale-[1.01] active:scale-95 transition-all mt-4 uppercase tracking-wide text-sm">Create Account</button>
             </form>
 
-            <div id="auth-error" style="color: var(--error); margin-top: 1rem; text-align: center; font-size: 0.875rem;"></div>
+            <div id="auth-error" class="text-red-500 text-xs font-bold text-center mt-6 uppercase tracking-wider min-h-[1.5rem]"></div>
         </div>
     </div>
 
+    <!-- Keep existing scripts -->
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/ui.js"></script> <!-- Included for consistent theme init, though optional here -->
 </body>
 </html>

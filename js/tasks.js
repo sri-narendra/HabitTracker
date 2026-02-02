@@ -25,20 +25,20 @@ function renderTasks() {
     });
 
     if (filtered.length === 0) {
-        list.innerHTML = '<p class="text-secondary" style="text-align: center;">No tasks found.</p>';
+        list.innerHTML = '<p class="text-accent-grey font-medium text-center py-8">No tasks found.</p>';
         return;
     }
 
     filtered.forEach(task => {
         const item = document.createElement('div');
-        item.className = `task-item glass ${task.completed ? 'completed' : ''}`;
+        item.className = `flex items-center gap-4 bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark p-4 rounded-xl transition-all hover:bg-slate-50 dark:hover:bg-white/[0.02] ${task.completed ? 'opacity-50' : ''}`;
         
         item.innerHTML = `
-            <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} onchange="toggleTask('${task._id}', this.checked)">
-            <span class="task-title">${task.title}</span>
-            <div class="task-actions">
-                <button class="btn btn-outline" style="padding: 0.25rem 0.5rem;" onclick="editTask('${task._id}')">Edit</button>
-                <button class="btn" style="padding: 0.25rem 0.5rem; background: rgba(255, 255, 255, 0.1); color: #ffffff;" onclick="deleteTask('${task._id}')">Delete</button>
+            <input type="checkbox" class="w-5 h-5 rounded border-slate-300 dark:border-border-dark text-primary focus:ring-primary bg-slate-100 dark:bg-black cursor-pointer" ${task.completed ? 'checked' : ''} onchange="toggleTask('${task._id}', this.checked)">
+            <span class="flex-1 font-medium ${task.completed ? 'line-through text-slate-500 dark:text-accent-grey' : 'text-slate-900 dark:text-white'}">${task.title}</span>
+            <div class="flex gap-2">
+                <button class="px-3 py-1 text-xs font-bold uppercase text-slate-500 dark:text-accent-grey hover:text-slate-900 dark:hover:text-white border border-slate-200 dark:border-border-dark rounded-lg hover:bg-slate-100 dark:hover:bg-white/5 transition-colors" onclick="editTask('${task._id}')">Edit</button>
+                <button class="px-3 py-1 text-xs font-bold uppercase text-red-500 hover:text-red-400 border border-transparent hover:bg-red-500/10 rounded-lg transition-colors" onclick="deleteTask('${task._id}')">Delete</button>
             </div>
         `;
         list.appendChild(item);
@@ -59,7 +59,7 @@ async function toggleTask(id, completed) {
 function setFilter(filter) {
     currentFilter = filter;
     document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.textContent.toLowerCase() === filter);
+        btn.classList.toggle('active', btn.dataset.filter === filter);
     });
     renderTasks();
 }

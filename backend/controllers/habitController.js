@@ -4,13 +4,14 @@ const analyticsService = require('../services/analyticsService');
 
 exports.createHabit = async (req, res, next) => {
     try {
-        const { name, category, difficulty, frequency } = req.body;
+        const { name, category, difficulty, frequency, color } = req.body;
         const habit = new Habit({
             userId: req.user.id,
             name,
             category,
             difficulty,
-            frequency
+            frequency,
+            color
         });
         await habit.save();
         res.status(201).json(habit);
@@ -28,12 +29,12 @@ exports.getHabits = async (req, res, next) => {
     }
 };
 
-exports.updateHabit = async (req, res, next) => {
+    exports.updateHabit = async (req, res, next) => {
     try {
-        const { name, category, difficulty, frequency } = req.body;
+        const { name, category, difficulty, frequency, color } = req.body;
         const habit = await Habit.findOneAndUpdate(
             { _id: req.params.id, userId: req.user.id },
-            { name, category, difficulty, frequency },
+            { name, category, difficulty, frequency, color },
             { new: true }
         );
         if (!habit) return res.status(404).json({ error: 'Habit not found' });

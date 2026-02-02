@@ -1,127 +1,230 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HabitFlow - Profile</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        .profile-header {
-            display: flex;
-            align-items: center;
-            gap: 2rem;
-            margin-bottom: 3rem;
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>User Profile | HabitFlow</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#19e65e",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#0a0a0a",
+                        "card-dark": "#161b18",
+                        "border-dark": "#2a332d",
+                        "surface-dark": "#161b18",
+                        "accent-grey": "#888888"
+                    },
+                    fontFamily: {
+                        display: "Manrope",
+                        sans: "Manrope"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.5rem",
+                        lg: "1rem",
+                        xl: "1.5rem",
+                        full: "9999px"
+                    }
+                }
+            }
+        };
+    </script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Manrope', sans-serif;
         }
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 3rem;
-            color: white;
-            font-weight: 800;
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .profile-info h1 { margin: 0; }
-        
-        .profile-section {
-            margin-bottom: 2rem;
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
         }
-        .badge-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 1.5rem;
+        .badge-locked {
+            filter: grayscale(100%);
+            opacity: 0.5;
         }
-        .badge-item {
-            text-align: center;
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-        .badge-icon {
-            width: 60px;
-            height: 60px;
-            background: var(--bg-tertiary);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 0.5rem;
-            font-size: 1.5rem;
-            filter: grayscale(1);
-            opacity: 0.3;
+        ::-webkit-scrollbar-track {
+            background: #000000;
         }
-        .badge-item.earned .badge-icon {
-            filter: grayscale(0);
-            opacity: 1;
-            background: var(--bg-secondary);
-            border: 2px solid var(--accent-primary);
+        ::-webkit-scrollbar-thumb {
+            background: #262626;
+            border-radius: 4px;
         }
-        .badge-name { font-size: 0.75rem; font-weight: 600; }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #333333;
+        }
     </style>
 </head>
-<body>
-    <nav class="navbar glass">
-        <a href="habits.html" class="nav-logo">HabitFlow</a>
-        <div class="nav-links">
-            <a href="habits.html" class="nav-link">Habits</a>
-            <a href="analytics.html" class="nav-link">Analytics</a>
-            <a href="tasks.html" class="nav-link">Tasks</a>
-            <a href="profile.html" class="nav-link active">Profile</a>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-neutral-100 min-h-screen selection:bg-primary/30">
+    <div class="layout-container flex h-full grow flex-col">
+        
+    <!-- Top Navigation Bar -->
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-border-dark px-10 py-3 bg-white dark:bg-background-dark sticky top-0 z-50">
+        <div class="flex items-center gap-8">
+            <a href="habits.html" class="flex items-center gap-3 text-primary">
+                <div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+                    <span class="material-symbols-outlined text-primary filled-icon">bolt</span>
+                </div>
+                <h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">HabitFlow</h2>
+            </a>
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="habits.html">Habit Management</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="analytics.html">Analytics</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="tasks.html">Tasks</a>
+                <a class="text-slate-900 dark:text-white border-b-2 border-primary pb-1 text-sm font-medium" href="profile.html">Profile</a>
+            </nav>
         </div>
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <div class="status-indicator">
-                <span class="status-dot"></span>
-                <span class="status-text">Checking...</span>
-            </div>
-            <button id="theme-toggle" class="btn btn-outline" style="padding: 0.5rem;">🌓</button>
-            <button id="logout-btn" class="btn btn-outline" style="padding: 0.5rem 1rem;">Logout</button>
+        <div class="flex items-center gap-4">
+            <button id="theme-toggle" class="p-2 text-slate-400 hover:text-white">
+                <span class="material-symbols-outlined">dark_mode</span>
+            </button>
+            <button id="logout-btn" class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                <span class="material-symbols-outlined">logout</span>
+            </button>
+            <div id="nav-avatar" class="size-9 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-sm font-black text-black border border-border-dark cursor-pointer">U</div>
         </div>
-    </nav>
+    </header>
 
-    <main class="container">
-        <section class="profile-header">
-            <div class="profile-avatar" id="avatar-initial">U</div>
-            <div class="profile-info">
-                <h1 id="profile-username">Username</h1>
-                <p id="profile-email" class="text-secondary">email@example.com</p>
-                <div style="margin-top: 1rem; display: flex; gap: 1rem;">
-                    <span class="btn btn-primary" id="profile-level" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">Level 1</span>
-                    <span class="btn btn-outline" id="profile-xp" style="padding: 0.25rem 0.75rem; font-size: 0.875rem;">0 XP</span>
+    <main class="flex flex-1 justify-center py-10 px-4 md:px-10 lg:px-40">
+        <div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+            <!-- Header Profile Card -->
+            <div class="flex p-6 @container bg-white dark:bg-card-dark rounded-xl mb-6 border border-slate-200 dark:border-border-dark shadow-xl">
+                <div class="flex w-full flex-col gap-6 @[520px]:flex-row @[520px]:justify-between @[520px]:items-center">
+                    <div class="flex gap-6 items-center">
+                        <div id="profile-avatar" class="size-32 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center text-6xl font-black text-black border-4 border-primary/20 shadow-inner translate-y-0">
+                            U
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <p id="profile-username" class="text-slate-900 dark:text-white text-[28px] font-extrabold leading-tight tracking-[-0.015em]">Loading...</p>
+                            <p id="profile-level" class="text-primary text-lg font-semibold leading-normal">Level 1</p>
+                            <div class="mt-4 p-3 bg-primary/10 rounded-lg inline-flex items-center gap-2 w-fit">
+                                <span class="material-symbols-outlined text-primary filled-icon">stars</span>
+                                <p id="profile-xp" class="text-primary text-xl font-bold leading-normal">0 XP</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 min-w-[280px]">
+                        <div class="flex gap-6 justify-between items-end">
+                            <p class="text-slate-900 dark:text-neutral-200 text-base font-bold leading-normal">Progress to Next Level</p>
+                            <p id="xp-progress-text" class="text-primary text-sm font-extrabold leading-normal">0%</p>
+                        </div>
+                        <div class="h-3 rounded-full bg-slate-200 dark:bg-neutral-800 overflow-hidden">
+                            <div id="xp-progress-bar" class="h-full rounded-full bg-primary transition-all duration-1000" style="width: 0%;"></div>
+                        </div>
+                        <p id="xp-remaining" class="text-slate-500 dark:text-neutral-500 text-sm font-normal leading-normal text-right">0 XP to next level</p>
+                    </div>
                 </div>
             </div>
-        </section>
 
-        <section class="stats-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 3rem;">
-            <div class="card stat-card">
-                <div class="stat-value" id="stat-longest-streak">0</div>
-                <div class="stat-label">Best Streak</div>
-            </div>
-            <div class="card stat-card">
-                <div class="stat-value" id="stat-total-completions">0</div>
-                <div class="stat-label">Total Completions</div>
-            </div>
-            <div class="card stat-card">
-                <div class="stat-value" id="stat-member-since">2026</div>
-                <div class="stat-label">Member Since</div>
-            </div>
-        </section>
-
-        <section class="profile-section">
-            <h3>Earned Badges</h3>
-            <div class="badge-grid" id="profile-badge-grid" style="margin-top: 1.5rem;">
-                <div class="badge-item earned">
-                    <div class="badge-icon">🎉</div>
-                    <div class="badge-name">Newcomer</div>
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="flex flex-1 gap-4 rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-card-dark p-6 flex-col shadow-sm">
+                    <div class="text-orange-500 bg-orange-500/10 w-10 h-10 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined filled-icon">local_fire_department</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <h2 id="stat-streak" class="text-slate-900 dark:text-white text-2xl font-black leading-tight">0 Days</h2>
+                        <p class="text-slate-500 dark:text-neutral-500 text-sm font-bold uppercase tracking-wider">Best Streak</p>
+                    </div>
                 </div>
-                <!-- Other badges logic -->
+                <div class="flex flex-1 gap-4 rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-card-dark p-6 flex-col shadow-sm">
+                    <div class="text-primary bg-primary/10 w-10 h-10 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined filled-icon">task_alt</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <h2 id="stat-total-habits" class="text-slate-900 dark:text-white text-2xl font-black leading-tight">0 Active</h2>
+                        <p class="text-slate-500 dark:text-neutral-500 text-sm font-bold uppercase tracking-wider">Total Habits</p>
+                    </div>
+                </div>
+                <div class="flex flex-1 gap-4 rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-card-dark p-6 flex-col shadow-sm">
+                    <div class="text-green-500 bg-green-500/10 w-10 h-10 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined filled-icon">trending_up</span>
+                    </div>
+                    <div class="flex flex-col gap-1">
+                        <h2 id="stat-completion-rate" class="text-slate-900 dark:text-white text-2xl font-black leading-tight">0%</h2>
+                        <p class="text-slate-500 dark:text-neutral-500 text-sm font-bold uppercase tracking-wider">Completion Rate</p>
+                    </div>
+                </div>
             </div>
-        </section>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Badges Section -->
+                <div class="lg:col-span-8">
+                    <div class="flex items-center justify-between px-2 pb-4 pt-2">
+                        <h2 class="text-slate-900 dark:text-white text-xl font-black tracking-tight">Badges & Milestones</h2>
+                        <!-- <button class="text-primary text-sm font-bold hover:underline">View All</button> -->
+                    </div>
+                    <div id="badges-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 bg-white dark:bg-card-dark rounded-xl border border-slate-200 dark:border-border-dark min-h-[300px]">
+                        <!-- Badges injected via JS -->
+                        <div class="col-span-4 flex items-center justify-center text-accent-grey">Loading badges...</div>
+                    </div>
+                </div>
+
+                <!-- Lifetime Stats Section -->
+                <div class="lg:col-span-4">
+                    <div class="px-2 pb-4 pt-2">
+                        <h2 class="text-slate-900 dark:text-white text-xl font-black tracking-tight">Lifetime Stats</h2>
+                    </div>
+                    <div class="rounded-xl border border-slate-200 dark:border-border-dark bg-white dark:bg-card-dark overflow-hidden">
+                        <div class="p-6 flex flex-col gap-5">
+                            <div class="flex justify-between items-center group">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-neutral-500">add_task</span>
+                                    <p class="text-slate-600 dark:text-neutral-300 font-medium">Habits Created</p>
+                                </div>
+                                <p id="stat-habits-created" class="text-slate-900 dark:text-white font-black text-lg">0</p>
+                            </div>
+                            <div class="h-px bg-slate-100 dark:bg-neutral-800 w-full"></div>
+                            <div class="flex justify-between items-center group">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-neutral-500">check_circle</span>
+                                    <p class="text-slate-600 dark:text-neutral-300 font-medium">Habits Completed</p>
+                                </div>
+                                <p id="stat-habits-completed" class="text-slate-900 dark:text-white font-black text-lg">0</p>
+                            </div>
+                            <div class="h-px bg-slate-100 dark:bg-neutral-800 w-full"></div>
+                            <div class="flex justify-between items-center group">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-neutral-500">timeline</span>
+                                    <p class="text-slate-600 dark:text-neutral-300 font-medium">Longest Streak</p>
+                                </div>
+                                <p id="stat-lifetime-streak" class="text-slate-900 dark:text-white font-black text-lg">0 Days</p>
+                            </div>
+                            <div class="h-px bg-slate-100 dark:bg-neutral-800 w-full"></div>
+                            <div class="flex justify-between items-center group">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-neutral-500">calendar_month</span>
+                                    <p class="text-slate-600 dark:text-neutral-300 font-medium">Active Days</p>
+                                </div>
+                                <p id="stat-active-days" class="text-slate-900 dark:text-white font-black text-lg">0</p>
+                            </div>
+                            <div class="h-px bg-slate-100 dark:bg-neutral-800 w-full"></div>
+                            <div class="mt-4 p-4 bg-primary/5 rounded-lg border border-primary/10">
+                                <p class="text-[10px] text-primary font-bold uppercase tracking-[0.2em] mb-2">Member Since</p>
+                                <p class="text-slate-900 dark:text-white font-bold flex items-center gap-2">
+                                    <span class="material-symbols-outlined !text-sm">event</span>
+                                    <span id="stat-member-since">2023</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
+    </div>
 
+    <!-- Scripts -->
     <script src="js/api.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/profile.js"></script>

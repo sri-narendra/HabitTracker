@@ -1,178 +1,276 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HabitFlow - Habit Management</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        .habit-grid-container {
-            overflow-x: auto;
-            margin-top: 2rem;
-            padding-bottom: 1rem;
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Habit Flow - Grid Console</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#19e65e",
+                        "background-dark": "#000000",
+                        "surface-dark": "#0A0A0A",
+                        "border-dark": "#1A1A1A",
+                        "accent-grey": "#888888",
+                        "day-highlight": "#1a365d",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "0.75rem",
+                        "xl": "1rem",
+                        "2xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
         }
-        .habit-table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0 0.5rem;
-            min-width: 800px;
+    </script>
+<style type="text/tailwindcss">
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
         }
-        .habit-table th {
-            text-align: left;
-            padding: 1rem;
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-            font-weight: 500;
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
         }
-        .habit-row {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-sm);
+        body {
+            font-family: 'Manrope', sans-serif;
         }
-        .habit-row td {
-            padding: 1rem;
+        ::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
         }
-        .habit-info {
-            display: flex;
-            flex-direction: column;
+        ::-webkit-scrollbar-track {
+            background: #000000;
         }
-        .habit-name { font-weight: 600; }
-        .habit-meta { font-size: 0.75rem; color: var(--text-secondary); }
-
-        .day-cell {
-            width: 30px;
-            height: 30px;
-            border-radius: 4px;
-            background: var(--bg-tertiary);
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: var(--transition);
+        ::-webkit-scrollbar-thumb {
+            background: #222222;
+            border-radius: 10px;
         }
-        .day-cell.completed {
-            background: #ffffff;
-            color: #000000;
+        ::-webkit-scrollbar-thumb:hover {
+            background: #333333;
         }
-        .day-cell.today {
-            border: 2px solid #ffffff;
+        .sticky-col {
+            position: sticky;
+            left: 0;
+            z-index: 10;
+            @apply bg-white dark:bg-background-dark;
+            min-width: 280px;
+            max-width: 280px;
         }
-        .day-cell:hover {
-            filter: brightness(1.2);
+        .habit-grid-cell {
+            min-width: 40px;
+            width: 40px;
+            height: 40px;
         }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-        
-        .xp-animation {
-            position: fixed;
+        .xp-pop {
             pointer-events: none;
-            color: #ffffff;
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #19e65e;
             font-weight: 800;
-            animation: floatUp 1s ease-out forwards;
-            z-index: 2000;
+            font-size: 10px;
+            opacity: 0;
+            transition: all 0.4s ease;
         }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-50px); opacity: 0; }
+        .habit-cell:active .xp-pop {
+            opacity: 1;
+            top: -30px;
         }
     </style>
 </head>
-<body>
-    <nav class="navbar glass">
-        <a href="habits.html" class="nav-logo">HabitFlow</a>
-        <div class="nav-links">
-            <a href="habits.html" class="nav-link active">Habits</a>
-            <a href="analytics.html" class="nav-link">Analytics</a>
-            <a href="tasks.html" class="nav-link">Tasks</a>
-            <a href="profile.html" class="nav-link">Profile</a>
+<body class="bg-white dark:bg-background-dark text-slate-900 dark:text-white min-h-screen selection:bg-primary/30">
+<div class="fixed inset-0 z-[200] hidden items-center justify-center bg-black/90 backdrop-blur-sm p-4" id="habit-modal">
+<div class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-border-dark flex justify-between items-center">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white" id="modal-title">Create Protocol</h3>
+<button class="text-accent-grey hover:text-white" onclick="window.toggleModal('habit-modal', false)">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="p-8 space-y-6" id="habit-form">
+<input type="hidden" id="habit-id">
+<input type="hidden" id="habit-difficulty" value="Medium">
+<input type="hidden" id="habit-frequency" value="daily">
+<input type="hidden" id="habit-color" value="green">
+
+<div>
+    <label class="block text-xs font-black uppercase tracking-widest text-accent-grey mb-2">Habit Designation</label>
+    <input class="w-full bg-slate-50 dark:bg-black border border-slate-200 dark:border-border-dark rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary transition-all text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-neutral-600" placeholder="e.g. Deep Work Session" type="text" id="habit-name" required/>
+</div>
+
+<div class="grid grid-cols-2 gap-4">
+    <div>
+        <label class="block text-xs font-black uppercase tracking-widest text-accent-grey mb-2">Category</label>
+        <select class="w-full bg-slate-50 dark:bg-black border border-slate-200 dark:border-border-dark rounded-xl px-4 py-3 focus:border-primary focus:ring-1 focus:ring-primary transition-all text-slate-900 dark:text-white" id="habit-category">
+            <option value="Productivity">Productivity</option>
+            <option value="Health">Health</option>
+            <option value="Mental">Mental</option>
+            <option value="Growth">Growth</option>
+        </select>
+    </div>
+    <div>
+        <label class="block text-xs font-black uppercase tracking-widest text-accent-grey mb-2">Color Label</label>
+<div class="flex gap-2 items-center h-12" id="color-options">
+<div onclick="window.selectColor('green', this)" class="size-6 rounded-full bg-primary border-2 border-white ring-2 ring-primary/20 cursor-pointer transition-all hover:scale-110" data-color="green"></div>
+<div onclick="window.selectColor('blue', this)" class="size-6 rounded-full bg-blue-500 cursor-pointer opacity-50 hover:opacity-100 transition-all hover:scale-110" data-color="blue"></div>
+<div onclick="window.selectColor('purple', this)" class="size-6 rounded-full bg-purple-500 cursor-pointer opacity-50 hover:opacity-100 transition-all hover:scale-110" data-color="purple"></div>
+<div onclick="window.selectColor('orange', this)" class="size-6 rounded-full bg-orange-500 cursor-pointer opacity-50 hover:opacity-100 transition-all hover:scale-110" data-color="orange"></div>
+</div>
+</div>
+</div>
+
+<div class="grid grid-cols-2 gap-4 mt-4">
+    <button type="button" id="delete-habit-btn" class="w-full py-4 bg-red-500/10 border border-red-500/50 text-red-500 font-black rounded-xl hover:bg-red-500/20 transition-all hidden">Delete</button>
+    <button class="w-full py-4 bg-primary text-black font-black rounded-xl hover:scale-[1.01] active:scale-95 transition-all col-span-1" type="submit">Save Protocol</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Top Navigation Bar -->
+    <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-slate-200 dark:border-border-dark px-10 py-3 bg-white dark:bg-background-dark sticky top-0 z-50">
+        <div class="flex items-center gap-8">
+            <a href="habits.html" class="flex items-center gap-3 text-primary">
+                <div class="size-8 flex items-center justify-center bg-primary/10 rounded-lg">
+                    <span class="material-symbols-outlined text-primary filled-icon">bolt</span>
+                </div>
+                <h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">HabitFlow</h2>
+            </a>
+            <nav class="hidden md:flex items-center gap-8">
+                <a class="text-slate-900 dark:text-white border-b-2 border-primary pb-1 text-sm font-medium" href="habits.html">Habit Management</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="analytics.html">Analytics</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="tasks.html">Tasks</a>
+                <a class="text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-primary text-sm font-medium transition-colors" href="profile.html">Profile</a>
+            </nav>
         </div>
-        <div style="display: flex; align-items: center; gap: 1rem;">
-            <div class="status-indicator">
-                <span class="status-dot"></span>
-                <span class="status-text">Checking...</span>
-            </div>
-            <button id="theme-toggle" class="btn btn-outline" style="padding: 0.5rem;">🌓</button>
-            <button id="logout-btn" class="btn btn-outline" style="padding: 0.5rem 1rem;">Logout</button>
+        <div class="flex items-center gap-4">
+            <button id="theme-toggle" class="p-2 text-slate-400 hover:text-white">
+                <span class="material-symbols-outlined">dark_mode</span>
+            </button>
+            <button id="logout-btn" class="p-2 text-slate-400 hover:text-red-500 transition-colors">
+                <span class="material-symbols-outlined">logout</span>
+            </button>
+            <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border border-border-dark" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBETW5x4_Pr3ioo-z6pKB-yOQ2ACbKduJviH988JOQCl-hXWiMdJeWH7DEyFVY9DVBMSei4c6Z6TVLilYKVPnBhLekD56dl3ASkEjzHy_9EQFuK7ELluNvNPMMxqAZMQq2e6m6TvcRZfPjP228MN50weFLCezGkbFHaGWlQPsDqv4DIjRNILxNus-OwIHOmeRYYHG0Ffv4ItO8bBgIN-hFJEWF3MedD0w-KEu8hevefkqIuceFHiNZ5XU2emXz8ha4tz_7JaFU6A-0");'></div>
         </div>
-    </nav>
+    </header>
+<main class="max-w-[1600px] mx-auto px-6 py-8 space-y-8">
+<header class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-4 border-b border-border-dark/50">
+<div>
+<div class="flex items-center gap-3 mb-2">
+    <h2 class="text-4xl font-black tracking-tight">Habit Management</h2>
+    <span id="current-month-label" class="px-3 py-1 bg-surface-dark border border-border-dark rounded-full text-[10px] font-black text-accent-grey uppercase tracking-widest">Loading...</span>
+</div>
+    <p class="text-accent-grey font-medium">Track your daily habits and build consistency.</p>
+</div>
+</header>
 
-    <main class="container">
-        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-            <div>
-                <h1>Habit Management</h1>
-                <p class="text-secondary">Track your consistency and grow.</p>
-            </div>
-            <button class="btn btn-primary" onclick="window.toggleModal('habit-modal')">+ Add Habit</button>
-        </header>
-
-        <section class="card glass">
-            <div class="calendar-header">
-                <h3 id="calendar-month-name">February 2026</h3>
-                <div style="display: flex; gap: 0.5rem;">
-                    <button class="btn btn-outline" style="padding: 0.25rem 0.5rem;" onclick="changeMonth(-1)"><</button>
-                    <button class="btn btn-outline" style="padding: 0.25rem 0.5rem;" onclick="changeMonth(1)">></button>
-                </div>
-            </div>
-
-            <div class="habit-grid-container">
-                <table class="habit-table">
-                    <thead>
-                        <tr id="calendar-header-row">
-                            <th>Habit</th>
-                            <!-- Days will be injected here -->
-                        </tr>
-                    </thead>
-                    <tbody id="habit-list">
-                        <!-- Habits and completion cells will be injected here -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
-
-    <!-- Habit Modal -->
-    <div id="habit-modal" class="modal-overlay" onclick="if(event.target === this) window.toggleModal('habit-modal', false)">
-        <div class="card modal-content">
-            <h2 id="modal-title">Add New Habit</h2>
-            <form id="habit-form" style="margin-top: 1.5rem;">
-                <input type="hidden" id="habit-id">
-                <div class="form-group">
-                    <label class="form-label">Name</label>
-                    <input type="text" id="habit-name" class="form-input" required placeholder="e.g. Read for 30 mins">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Category</label>
-                    <input type="text" id="habit-category" class="form-input" placeholder="e.g. Health, Learning">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Difficulty</label>
-                    <select id="habit-difficulty" class="form-input">
-                        <option value="Easy">Easy (+10 XP)</option>
-                        <option value="Medium">Medium (+25 XP)</option>
-                        <option value="Hard">Hard (+50 XP)</option>
-                    </select>
-                </div>
-                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <button type="button" class="btn btn-outline" style="flex: 1;" onclick="window.toggleModal('habit-modal', false)">Cancel</button>
-                    <button type="submit" class="btn btn-primary" style="flex: 1;">Save Habit</button>
-                </div>
-                <button type="button" id="delete-habit-btn" class="btn" style="width: 100%; margin-top: 1rem; background: rgba(255, 255, 255, 0.1); color: #ffffff; display: none;">Delete Habit</button>
-            </form>
+<!-- Stats Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark p-5 rounded-xl flex items-center gap-4">
+        <div class="size-12 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500 shrink-0">
+            <span class="material-symbols-outlined filled-icon text-2xl">trending_up</span>
+        </div>
+        <div class="min-w-0">
+            <p class="text-[10px] font-black uppercase text-accent-grey tracking-widest mb-1">Consistency</p>
+            <p class="text-2xl font-black text-slate-900 dark:text-white" id="stat-consistency">0%</p>
         </div>
     </div>
+    <div class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark p-5 rounded-xl flex items-center gap-4">
+        <div class="size-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+            <span class="material-symbols-outlined filled-icon text-2xl">workspace_premium</span>
+        </div>
+        <div class="min-w-0">
+            <p class="text-[10px] font-black uppercase text-accent-grey tracking-widest mb-1">Perfect Days</p>
+            <p class="text-2xl font-black text-slate-900 dark:text-white" id="stat-perfect-days">0</p>
+        </div>
+    </div>
+    <div class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark p-5 rounded-xl flex items-center gap-4">
+        <div class="size-12 rounded-lg bg-orange-500/10 flex items-center justify-center text-orange-500 shrink-0">
+            <span class="material-symbols-outlined filled-icon text-2xl">speed</span>
+        </div>
+        <div class="min-w-0">
+            <p class="text-[10px] font-black uppercase text-accent-grey tracking-widest mb-1">Velocity</p>
+            <p class="text-2xl font-black text-slate-900 dark:text-white" id="stat-velocity">0/wk</p>
+        </div>
+    </div>
+</div>
+
+<!-- Habit Table Card -->
+<div class="bg-white dark:bg-surface-dark border border-slate-200 dark:border-border-dark rounded-2xl overflow-hidden">
+<div class="p-6 border-b border-slate-200 dark:border-border-dark flex items-center justify-between bg-slate-50 dark:bg-black/20">
+    <div class="flex items-center gap-6">
+        <h3 class="text-sm font-black uppercase tracking-[0.2em] text-accent-grey">Monthly Tracking Matrix</h3>
+        <div class="flex gap-2">
+            <button class="size-8 flex items-center justify-center rounded-lg border border-border-dark hover:border-primary hover:text-primary transition-all bg-black" onclick="window.calendar.changeMonth(-1)">
+                <span class="material-symbols-outlined text-sm">chevron_left</span>
+            </button>
+            <button class="size-8 flex items-center justify-center rounded-lg border border-border-dark hover:border-primary hover:text-primary transition-all bg-black" onclick="window.calendar.changeMonth(1)">
+                <span class="material-symbols-outlined text-sm">chevron_right</span>
+            </button>
+        </div>
+    </div>
+    <button class="px-4 py-2 bg-white text-black text-xs font-black uppercase rounded-lg hover:bg-primary transition-all" onclick="window.toggleModal('habit-modal', true)">
+        Add New Habit
+    </button>
+</div>
+
+<div class="overflow-x-auto relative">
+    <table class="w-full border-collapse">
+        <thead>
+            <tr class="bg-black/40" id="calendar-header-row">
+                <th class="sticky-col text-left px-6 py-4 border-r border-border-dark min-w-[280px]" style="min-width: 280px; max-width: 280px;">
+                    <span class="text-[10px] font-black uppercase tracking-widest text-accent-grey">Habit Protocol</span>
+                </th>
+            </tr>
+        </thead>
+
+<tbody id="habit-list">
+<!-- Dynamic content injected by js/habits.js -->
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-black/40 border-t border-border-dark flex flex-wrap items-center justify-between text-[10px] font-black uppercase text-accent-grey tracking-widest gap-4">
+<div class="flex gap-6">
+<div class="flex items-center gap-2"><div class="size-2 rounded bg-primary/20"></div> Completed</div>
+<div class="flex items-center gap-2"><div class="size-2 rounded bg-white/5"></div> Pending</div>
+<div class="flex items-center gap-2"><div class="size-2 rounded bg-day-highlight/40"></div> Current Day</div>
+</div>
+<span>Scroll horizontally for full month history</span>
+</div>
+</div>
+</div>
+
+</main>
+<footer class="w-full border-t border-border-dark bg-black/80 mt-20">
+<div class="max-w-[1600px] mx-auto px-6 py-12 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2 opacity-50 grayscale">
+<div class="size-6 flex items-center justify-center bg-white rounded text-black">
+<span class="material-symbols-outlined text-xs filled-icon">bolt</span>
+</div>
+<span class="text-sm font-black tracking-tighter">HABITFLOW</span>
+</div>
+<div class="text-accent-grey text-[10px] font-bold uppercase tracking-[0.2em]">
+            © 2023 HABITFLOW PROTOCOL. ALL RIGHTS RESERVED.
+        </div>
+<div class="flex gap-8">
+<a class="text-accent-grey hover:text-white text-xs font-bold transition-colors" href="#">PRIVACY</a>
+<a class="text-accent-grey hover:text-white text-xs font-bold transition-colors" href="#">TERMS</a>
+<a class="text-accent-grey hover:text-white text-xs font-bold transition-colors" href="#">SUPPORT</a>
+</div>
+</div>
+</footer>
 
     <script src="js/api.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/calendar.js"></script>
     <script src="js/habits.js"></script>
-</body>
-</html>
+</body></html>

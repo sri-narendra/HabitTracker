@@ -6,6 +6,7 @@ const habitSchema = new mongoose.Schema({
     category: { type: String, default: 'General' },
     difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], default: 'Medium' },
     frequency: { type: String, default: 'Daily' }, // Future-proofing
+    color: { type: String, default: 'green' },
     createdAt: { type: Date, default: Date.now }
 });
 
