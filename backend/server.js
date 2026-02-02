@@ -64,8 +64,8 @@ const limiter = rateLimit({
     max: 100 // limit each IP to 100 requests per windowMs
 });
 
-// Serve static files from docs directory (frontend files)
-app.use(express.static(path.join(__dirname, '..', 'docs')));
+// Serve static files from parent directory (frontend files)
+app.use(express.static(path.join(__dirname, '..')));
 
 // Basic Route
 app.get('/api/status', (req, res) => {
@@ -85,7 +85,7 @@ app.get('*', (req, res) => {
     if (req.path.startsWith('/api/')) {
         return res.status(404).json({ error: 'API endpoint not found' });
     }
-    res.sendFile(path.join(__dirname, '..', 'docs', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
 // Database Connection
